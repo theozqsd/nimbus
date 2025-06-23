@@ -1,2 +1,2 @@
 # nimbus
-Open source cloud storage written in Go.
+Open source cloud storage.
