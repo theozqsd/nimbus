@@ -1,10 +1,12 @@
 import os
 import subprocess
+from pathlib import Path
 
 server = "100.96.46.91"
-remote_path = "/home/theo"
+home = Path.home()
+remote_path = home
 mount_path = "/mnt/nimbus"
-sync_path = "/home/theo/nimbus"
+sync_path = Path(home, "nimbus")
 
 def login():
     user = input("User: ")
@@ -13,17 +15,17 @@ def login():
 user = login()
 
 # Vérifier et créer le répertoire de montage local s'il n'existe pas
-if not os.path.isdir(mount_path):
+if not Path(mount_path).is_dir():
     try:
-        os.makedirs(mount_path)
+        mount_path.mkdir(parents=True, exist_ok=True)
         print(f"Directory {mount_path} created.")
     except OSError as e:
         print(f"An error occurred while creating the directory: {e}")
 
 # Idem mais avec le répertoire de synchro local 
-if not os.path.isdir(sync_path):
+if not Path(sync_path).is_dir():
     try:
-        os.makedirs(sync_path)
+        sync_path.mkdir(parents=True, exist_ok=True)
         print(f"Directory {sync_path} created.")
     except OSError as e:
         print(f"An error occurred while creating the directory: {e}")
