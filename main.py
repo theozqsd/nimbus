@@ -8,7 +8,7 @@ load_dotenv()
 server = os.getenv("SERVER_IP")
 home = Path.home()
 remote_path = home
-mount_path = "/mnt/nimbus"
+mount_path = Path("/mnt/nimbus")
 sync_path = Path(home, "nimbus")
 
 def login():
@@ -17,21 +17,28 @@ def login():
 
 user = login()
 
-# Vérifier et créer le répertoire de montage local s'il n'existe pas
-if not Path(mount_path).is_dir():
+if not mount_path.is_dir():
     try:
         mount_path.mkdir(parents=True, exist_ok=True)
         print(f"Directory {mount_path} created.")
     except OSError as e:
         print(f"An error occurred while creating the directory: {e}")
 
-# Idem mais avec le répertoire de synchro local 
-if not Path(sync_path).is_dir():
+if not sync_path.is_dir():
     try:
         sync_path.mkdir(parents=True, exist_ok=True)
         print(f"Directory {sync_path} created.")
     except OSError as e:
         print(f"An error occurred while creating the directory: {e}")
+
+def sync():
+    unison = f"unison {sync_path} {mount_path} -auto -batch"
+
+    try:
+        subprocess.run(unison, shell=True, check=True)
+        print("Synchronization completed successfully.")
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred during synchronization: {e}")
 
 def watch():
     fswatch = f"fswatch -o {sync_path} {mount_path}"
@@ -43,19 +50,7 @@ def watch():
             print("Change detected, synchronizing...")
             sync()
     except KeyboardInterrupt:
-        print("Adios.")
-
-def sync():
-
-    unison = f"unison {sync_path} {mount_path} -auto -batch"
-
-    try:
-        subprocess.run(unison, shell=True, check=True)
-        print("Synchronization completed successfully.")
-    except subprocess.CalledProcessError as e:
-        print(f"An error occurred during synchronization: {e}")
-
-    watch()
+        print("o7")
 
 mount = f"sudo sshfs -o allow_other,default_permissions {user}@{server}:{remote_path} {mount_path}"
 
@@ -65,3 +60,5 @@ try:
     sync()
 except subprocess.CalledProcessError as e:
     print(f"Error while mounting Nimbus: {e}")
+finally:
+    watch()
