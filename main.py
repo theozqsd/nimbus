@@ -32,7 +32,7 @@ if not sync_path.is_dir():
         print(f"An error occurred while creating the directory: {e}")
 
 def sync():
-    unison = f"unison {sync_path} {mount_path} -auto -batch"
+    unison = f"unison {sync_path} {mount_path} -auto -batch -prefer newer"
 
     try:
         subprocess.run(unison, shell=True, check=True)
