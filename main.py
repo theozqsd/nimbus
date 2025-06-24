@@ -10,12 +10,13 @@ home = Path.home()
 remote_path = os.getenv("REMOTE")
 mount_path = Path("/mnt/nimbus")
 sync_path = Path(home, "nimbus")
+local_user = home.parts[2]
 
 def login():
-    user = input("User: ")
-    return user
+    remote_user = input("User: ")
+    return remote_user
 
-user = login()
+remote_user = login()
 
 if not mount_path.is_dir():
     try:
@@ -52,7 +53,7 @@ def watch():
     except KeyboardInterrupt:
         print("o7")
 
-mount = f"sudo sshfs -o allow_other,default_permissions {user}@{server}:{remote_path} {mount_path}"
+mount = f"sshfs -o IdentityFile=/home/{local_user}/.ssh/id_ed25519,allow_other,default_permissions {remote_user}@{server}:{remote_path} {mount_path}"
 
 try:
     subprocess.run(mount, shell=True, check=True)
