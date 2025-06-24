@@ -30,45 +30,35 @@ if not Path(sync_path).is_dir():
     except OSError as e:
         print(f"An error occurred while creating the directory: {e}")
 
-
-mount = [
-    "sudo", "sshfs",
-    "-o", "allow_other,default_permissions", 
-    f"{user}@{server}:{remote_path}",
-    mount_path
-]
-
-try:
-    subprocess.run(mount, check=True)
-    print("Nimbus has been mounted.")
-except subprocess.CalledProcessError as e:
-    print(f"Error while mounting Nimbus: {e}")
-
 def watch():
-    fswatch = ["fswatch", "-o", sync_path, mount_path]
+    fswatch = f"fswatch -o {sync_path} {mount_path}"
+
     print("Watching for files to sync...")
+    
     try:
-        for line in iter(subprocess.Popen(fswatch, stdout=subprocess.PIPE).stdout.readline, b''):
+        for line in iter(subprocess.Popen(fswatch, shell=True, stdout=subprocess.PIPE).stdout.readline, b''):
             print("Change detected, synchronizing...")
             sync()
     except KeyboardInterrupt:
         print("Adios.")
 
 def sync():
-    unison = [
-        "unison",
-        sync_path,
-        mount_path,
-        "-auto",  
-        "-batch" 
-    ] 
+
+    unison = f"unison {sync_path} {mount_path} -auto -batch"
 
     try:
-        subprocess.run(unison, check=True)
+        subprocess.run(unison, shell=True, check=True)
         print("Synchronization completed successfully.")
     except subprocess.CalledProcessError as e:
         print(f"An error occurred during synchronization: {e}")
 
     watch()
 
-sync()
+mount = f"sudo sshfs -o allow_other,default_permissions {user}@{server}:{remote_path} {mount_path}"
+
+try:
+    subprocess.run(mount, shell=True, check=True)
+    print("Nimbus has been mounted.")
+    sync()
+except subprocess.CalledProcessError as e:
+    print(f"Error while mounting Nimbus: {e}")
