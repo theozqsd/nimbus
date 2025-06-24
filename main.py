@@ -42,21 +42,6 @@ try:
 except subprocess.CalledProcessError as e:
     print(f"Error while mounting Nimbus: {e}")
 
-def sync():
-    unison = [
-        "unison",
-        sync_path,
-        mount_path,
-        "-auto",  
-        "-batch" 
-    ]
-
-    try:
-        subprocess.run(unison, check=True)
-        print("Synchronization completed successfully.")
-    except subprocess.CalledProcessError as e:
-        print(f"An error occurred during synchronization: {e}")
-
 def watch():
     fswatch = ["fswatch", "-o", sync_path, mount_path]
     print("Watching for files to sync...")
@@ -67,4 +52,21 @@ def watch():
     except KeyboardInterrupt:
         print("Adios.")
 
-watch()
+def sync():
+    unison = [
+        "unison",
+        sync_path,
+        mount_path,
+        "-auto",  
+        "-batch" 
+    ] 
+
+    try:
+        subprocess.run(unison, check=True)
+        print("Synchronization completed successfully.")
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred during synchronization: {e}")
+
+    watch()
+
+sync()
