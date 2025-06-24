@@ -1,8 +1,10 @@
+from pathlib import Path
+from dotenv import load_dotenv
 import os
 import subprocess
 import pwinput
-from pathlib import Path
-from dotenv import load_dotenv
+import sys
+import time
 
 load_dotenv()
 
@@ -36,6 +38,16 @@ if not sync_path.is_dir():
     except OSError as e:
         print(f"An error occurred while creating the directory: {e}")
 
+def loading(message="Loading"):
+    spinner = ["|", "/", "-", "\\"]
+    i = 0
+
+    while True:
+        sys.stdout.write(f"\r{message}... {spinner[i % len(spinner)]}")
+        sys.stdout.flush()
+        time.sleep(0.1)
+        i += 1
+
 def sync():
     unison = f"unison {sync_path} {mount_path} -auto -batch -prefer newer"
 
@@ -48,7 +60,7 @@ def sync():
 def watch():
     fswatch = f"fswatch -o {sync_path} {mount_path}"
 
-    print("Watching for files to sync...")
+    loading("Watching for files to sync")
 
     try:
         for line in iter(subprocess.Popen(fswatch, shell=True, stdout=subprocess.PIPE).stdout.readline, b''):
