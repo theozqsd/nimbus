@@ -1,8 +1,11 @@
 import os
 import subprocess
 from pathlib import Path
+from dotenv import load_dotenv
 
-server = "100.96.46.91"
+load_dotenv()
+
+server = os.getenv("SERVER_IP")
 home = Path.home()
 remote_path = home
 mount_path = "/mnt/nimbus"
@@ -34,7 +37,7 @@ def watch():
     fswatch = f"fswatch -o {sync_path} {mount_path}"
 
     print("Watching for files to sync...")
-    
+
     try:
         for line in iter(subprocess.Popen(fswatch, shell=True, stdout=subprocess.PIPE).stdout.readline, b''):
             print("Change detected, synchronizing...")
