@@ -7,7 +7,7 @@ load_dotenv()
 
 server = os.getenv("SERVER_IP")
 home = Path.home()
-remote_path = home
+remote_path = os.getenv("REMOTE")
 mount_path = Path("/mnt/nimbus")
 sync_path = Path(home, "nimbus")
 
