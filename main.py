@@ -1,5 +1,6 @@
 import os
 import subprocess
+import pwinput
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -11,12 +12,15 @@ remote_path = os.getenv("REMOTE")
 mount_path = Path("/mnt/nimbus")
 sync_path = Path(home, "nimbus")
 local_user = home.parts[2]
+ssh_key_path = Path(home, ".ssh", "id_ed25519")
 
-def login():
-    remote_user = input("User: ")
-    return remote_user
+remote_user = input("User: ")
 
-remote_user = login()
+if not ssh_key_path.is_file():
+    mount = f"sshfs -o allow_other,default_permissions {remote_user}@{server}:{remote_path} {mount_path}"
+else:
+    mount = f"sshfs -o IdentityFile={ssh_key_path},allow_other,default_permissions {remote_user}@{server}:{remote_path} {mount_path}"
+
 
 if not mount_path.is_dir():
     try:
@@ -52,8 +56,6 @@ def watch():
             sync()
     except KeyboardInterrupt:
         print("o7")
-
-mount = f"sshfs -o IdentityFile=/home/{local_user}/.ssh/id_ed25519,allow_other,default_permissions {remote_user}@{server}:{remote_path} {mount_path}"
 
 try:
     subprocess.run(mount, shell=True, check=True)
