@@ -1,2 +1,2 @@
 # nimbus
-Open source cloud storage.
+Files sync.
