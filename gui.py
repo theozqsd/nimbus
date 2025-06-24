@@ -7,6 +7,7 @@ from pathlib import Path
 
 home = Path.home()
 nimbus_dir = home / "nimbus"
+backup_dir = home / "nimbus_backup"
 nimbus_script = Path(__file__).parent / "main.py"
 icon_path = Path(__file__).parent / "icon.png"
 
@@ -25,8 +26,12 @@ class TrayApp:
 
         menu.addSeparator()
         
-        open_action = QAction("Ouvrir dossier", self.app)
+        open_action = QAction("Ouvrir cloud", self.app)
         open_action.triggered.connect(self.open_folder)
+        menu.addAction(open_action)
+
+        open_action = QAction("Ouvrir backup local", self.app)
+        open_action.triggered.connect(self.open_backup)
         menu.addAction(open_action)
 
         sync_action = QAction("Forcer synchronisation", self.app)
@@ -48,6 +53,9 @@ class TrayApp:
 
     def open_folder(self):
         subprocess.Popen(["xdg-open", str(nimbus_dir)])
+
+    def open_backup(self):
+        subprocess.Popen(["xdg-open", str(backup_dir)])
 
     def force_sync(self):
         subprocess.Popen(["python3", str(nimbus_script)])
