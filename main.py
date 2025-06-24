@@ -1,5 +1,5 @@
 from pathlib import Path
-from dotenv import load_dotenv
+from dotenv import load_dotenv,find_dotenv, set_key
 import os
 import subprocess
 import pwinput
@@ -15,8 +15,12 @@ mount_path = Path("/mnt/nimbus")
 sync_path = Path(home, "nimbus")
 local_user = home.parts[2]
 ssh_key_path = Path(home, ".ssh", "id_ed25519")
+remote_user = os.getenv("REMOTE_USER")
 
-remote_user = input("User: ")
+if not remote_user:
+    remote_user = input("User: ")
+    env_path = find_dotenv()
+    set_key(env_path, "REMOTE_USER", remote_user)
 
 if not ssh_key_path.is_file():
     mount = f"sshfs -o allow_other,default_permissions {remote_user}@{server}:{remote_path} {mount_path}"
@@ -38,16 +42,6 @@ if not sync_path.is_dir():
     except OSError as e:
         print(f"An error occurred while creating the directory: {e}")
 
-def loading(message="Loading"):
-    spinner = ["|", "/", "-", "\\"]
-    i = 0
-
-    while True:
-        sys.stdout.write(f"\r{message}... {spinner[i % len(spinner)]}")
-        sys.stdout.flush()
-        time.sleep(0.1)
-        i += 1
-
 def sync():
     unison = f"unison {sync_path} {mount_path} -auto -batch -prefer newer"
 
@@ -60,7 +54,7 @@ def sync():
 def watch():
     fswatch = f"fswatch -o {sync_path} {mount_path}"
 
-    loading("Watching for files to sync")
+    print("Waiting for files to sync...")
 
     try:
         for line in iter(subprocess.Popen(fswatch, shell=True, stdout=subprocess.PIPE).stdout.readline, b''):
