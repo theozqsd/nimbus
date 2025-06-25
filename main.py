@@ -9,13 +9,14 @@ import time
 load_dotenv()
 
 server = os.getenv("SERVER_IP")
-home = Path.home()
-remote_path = os.getenv("REMOTE")
-mount_path = Path(home, "nimbus")
-sync_path = Path(home, "nimbus_backup")
-local_user = home.parts[2]
-ssh_key_path = Path(home, ".ssh", "id_ed25519")
 remote_user = os.getenv("REMOTE_USER")
+
+home = Path.home()
+local_user = home.parts[2]
+remote_dir = os.getenv("REMOTE")
+ssh_key_path = home / ".ssh" / "id_ed25519"
+nimbus_dir = home / "nimbus"
+backup_dir = home / "nimbus_backup"
 
 def log(message, symbol="ℹ️"):
     print(f"{symbol} {message}")
@@ -26,26 +27,26 @@ if not remote_user:
     set_key(env_path, "REMOTE_USER", remote_user)
 
 if not ssh_key_path.is_file():
-    mount = f"sshfs -o allow_other,default_permissions {remote_user}@{server}:{remote_path} {mount_path}"
+    mount = f"sshfs -o allow_other,default_permissions {remote_user}@{server}:{remote_dir} {nimbus_dir}"
 else:
-    mount = f"sshfs -o IdentityFile={ssh_key_path},allow_other,default_permissions {remote_user}@{server}:{remote_path} {mount_path}"
+    mount = f"sshfs -o IdentityFile={ssh_key_path},allow_other,default_permissions {remote_user}@{server}:{remote_dir} {nimbus_dir}"
 
-if not mount_path.is_dir():
+if not nimbus_dir.is_dir():
     try:
-        mount_path.mkdir(parents=True, exist_ok=True)
-        log(f"Directory {mount_path} created.","✅")
+        nimbus_dir.mkdir(parents=True, exist_ok=True)
+        log(f"Directory {nimbus_dir} created.","✅")
     except OSError as e:
         log(f"An error occurred while creating the directory: {e}","❌")
 
-if not sync_path.is_dir():
+if not backup_dir.is_dir():
     try:
-        sync_path.mkdir(parents=True, exist_ok=True)
-        print(f"Directory {sync_path} created.")
+        backup_dir.mkdir(parents=True, exist_ok=True)
+        print(f"Directory {backup_dir} created.")
     except OSError as e:
         log(f"An error occurred while creating the directory: {e}","❌")
 
 def sync():
-    unison = f"unison {sync_path} {mount_path} -auto -batch -prefer newer"
+    unison = f"unison {backup_dir} {nimbus_dir} -auto -batch -prefer newer"
 
     try:
         subprocess.run(unison, shell=True, check=True)
@@ -54,7 +55,7 @@ def sync():
         log(f"An error occurred during synchronization: {e}","❌")
 
 def watch():
-    fswatch = f"fswatch -o {sync_path} {mount_path}"
+    fswatch = f"fswatch -o {backup_dir} {nimbus_dir}"
 
     log("Waiting for files to sync...","🔄")
 
