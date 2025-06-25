@@ -2,9 +2,6 @@ from pathlib import Path
 from dotenv import load_dotenv,find_dotenv, set_key
 import os
 import subprocess
-import pwinput
-import sys
-import time
 
 load_dotenv()
 
@@ -15,8 +12,8 @@ home = Path.home()
 local_user = home.parts[2]
 remote_dir = os.getenv("REMOTE")
 ssh_key_path = home / ".ssh" / "id_ed25519"
-nimbus_dir = home / "nimbus"
-backup_dir = home / "nimbus_backup"
+nimbus_dir = home / ".local" / "share" / "nimbus" / "mount"
+backup_dir = home / ".local" / "share" / "nimbus" / "backup"
 
 def log(message, symbol="ℹ️"):
     print(f"{symbol} {message}")
