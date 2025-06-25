@@ -1,6 +1,8 @@
-# Nimbus
+# Nimbus, still in WIP
 
 Nimbus is a lightweight graphical application that mounts a remote directory via SSHFS, synchronizes files using Unison, and provides a simple system tray interface.
+
+It's still in work in progress.
 
 ---
 
