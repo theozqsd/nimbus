@@ -19,16 +19,24 @@ Create and activate the Python virtual environment, then install Python dependen
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-python3 -m pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Usage
 
-Copy the .env.example file into .env and configure it with your server details.
+Configure your .env file at the project root with your server details:
+
+```ini
+SERVER_IP=192.168.1.42
+REMOTE_USER=username
+REMOTE=/path/to/remote/directory
+```
 
 Launch the Nimbus GUI:
 
 ```bash
+cd /path/to/nimbus
+source venv/bin/activate
 python3 gui.py
 ```
 
@@ -43,9 +51,9 @@ python3 -m ruff check --fix
 
 ## Notes
 
-The remote directory is mounted at `~/.local/share/nimbus/mount`
+The remote directory is mounted at `~/nimbus`
 
-The local backup directory is `~/.local/share/nimbus/backup`
+The local backup directory is `~/nimbus_backup`
 
 On quitting the app, the remote mount is cleanly unmounted using `fusermount -u`
 
