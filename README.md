@@ -24,13 +24,7 @@ pip install -r requirements.txt
 
 ## Usage
 
-Configure your .env file at the project root with your server details:
-
-```ini
-SERVER_IP=192.168.1.42
-REMOTE_USER=username
-REMOTE=/path/to/remote/directory
-```
+Copy the .env.example file into .env and configure it with your server details.
 
 Launch the Nimbus GUI:
 
@@ -54,9 +48,9 @@ Then, use localhost as the server IP in the .env file, configure the other setti
 
 ## Notes
 
-The remote directory is mounted at `~/nimbus`
+The remote directory is mounted at `~/.local/share/nimbus/mount`
 
-The local backup directory is `~/nimbus_backup`
+The local backup directory is `~/.local/share/nimbus/backup`
 
 On quitting the app, the remote mount is cleanly unmounted using `fusermount -u`
 
