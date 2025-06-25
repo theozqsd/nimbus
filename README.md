@@ -42,6 +42,16 @@ python3 gui.py
 
 Use the system tray icon to open the cloud folder, local backup, force sync, or quit.
 
+### Connect to your localhost
+
+First start the ssh service
+
+```bash
+sudo systemctl start ssh.service
+```
+
+Then, use localhost as the server IP in the .env file, configure the other settings accordingly to your system.
+
 ## Notes
 
 The remote directory is mounted at `~/nimbus`
