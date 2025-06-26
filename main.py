@@ -26,7 +26,7 @@ if not remote_user:
 if not ssh_key_path.is_file():
     mount = f"sshfs -o allow_other,default_permissions {remote_user}@{server}:{remote_dir} {nimbus_dir}"
 else:
-    mount = f"sshfs -o IdentityFile={ssh_key_path},allow_other,default_permissions {remote_user}@{server}:{remote_dir} {nimbus_dir}"
+    mount = f"sshfs -o IdentityFile={ssh_key_path},allow_other,default_permissions,uid=1000,gid=1000 {remote_user}@{server}:{remote_dir} {nimbus_dir}"
 
 if not nimbus_dir.is_dir():
     try:
