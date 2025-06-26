@@ -55,9 +55,9 @@ python3 -m ruff check --fix
 
 ## Notes
 
-The remote directory is mounted at `~/.local/share/nimbus/mount`
+The remote directory is mounted at `/home/$USER/nimbus` to be seen as a drive.
 
-The local backup directory is `~/.local/share/nimbus/backup`
+The local backup directory is `/home/$USER/Documens/nimbus`, to access it easily.
 
 On quitting the app, the remote mount is cleanly unmounted using `fusermount -u`
 
