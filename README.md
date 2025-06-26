@@ -46,6 +46,13 @@ sudo systemctl start ssh.service
 
 Then, use localhost as the server IP in the .env file, configure the other settings accordingly to your system.
 
+## Contributing
+
+Don't forget to lint your code with ruff :
+```bash
+python3 -m ruff check --fix
+```
+
 ## Notes
 
 The remote directory is mounted at `~/.local/share/nimbus/mount`
