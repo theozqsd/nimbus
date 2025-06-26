@@ -42,6 +42,13 @@ python3 gui.py
 
 Use the system tray icon to open the cloud folder, local backup, force sync, or quit.
 
+## Contributing
+
+Don't forget to lint your code with ruff :
+```bash
+python3 -m ruff check --fix
+```
+
 ## Notes
 
 The remote directory is mounted at `~/nimbus`
