@@ -12,8 +12,8 @@ home = Path.home()
 local_user = home.parts[2]
 remote_dir = os.getenv("REMOTE")
 ssh_key_path = home / ".ssh" / "id_ed25519"
-nimbus_dir = home / ".local" / "share" / "nimbus" / "mount"
-backup_dir = home / ".local" / "share" / "nimbus" / "backup"
+nimbus_dir = home / "nimbus"
+backup_dir = home / "Documents/nimbus"
 
 def log(message, symbol="ℹ️"):
     print(f"{symbol} {message}")

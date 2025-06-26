@@ -7,7 +7,7 @@ from pathlib import Path
 
 home = Path.home()
 nimbus_dir = home / "nimbus"
-backup_dir = home / "nimbus_backup"
+backup_dir = home / "Documents/nimbus"
 nimbus_script = Path(__file__).parent / "main.py"
 icon_path = Path(__file__).parent / "icon.png"
 
