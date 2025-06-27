@@ -11,7 +11,7 @@ It's still in work in progress.
 Install the following system dependencies:
 
 ```bash
-sudo apt install sshfs unison fswatch python3-venv python3-pip libxcb-xinerama0
+sudo apt install sshfs unison fswatch python3-venv python3-pip libxcb-xinerama0 libnotify-bin
 ```
 
 Create and activate the Python virtual environment, then install Python dependencies:
