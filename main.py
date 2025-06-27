@@ -17,6 +17,10 @@ backup_dir = home / "Documents/nimbus"
 
 def log(message, symbol="ℹ️"):
     print(f"{symbol} {message}")
+    try:
+        subprocess.run(["notify-send", "Nimbus", f"{symbol} {message}"], check=True)
+    except Exception:  
+        pass
 
 if not remote_user:
     remote_user = input("User: ")
